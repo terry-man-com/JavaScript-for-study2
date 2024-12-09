@@ -9,6 +9,12 @@
     background-color: #000;
     border: 2px solid #fff;
 }
+#message-headline {
+    font-size: 50px;
+    color: #e80808;
+    margin: 0;
+    transition: 3s;
+}
 .counter-number {
     font-size: 50px;
     margin-bottom: 10px;
