@@ -10,9 +10,14 @@
     let currentCount = parseInt($counter.textContent);
 
     if ($targetButton.textContent === "+") {
-      if (startTime === null) startTime = new Date(); // 初回クリック時にタイマー開始
+      if (startTime === null) {
+        startTime = new Date(); } // 初回クリック時にタイマー開始
 
-      if (currentCount === 29) {
+      if (currentCount === 5) {
+        changeBackGroundColor();
+      }
+
+      if (currentCount === 9) {
         const elapsedTime = (new Date() - startTime) / 1000; // 経過時間（秒）
 
         // 称号を決定
@@ -20,28 +25,37 @@
         let sound = null;
 
         if (elapsedTime <= 3) {
-          title = "ビギナー";
+          title = "高橋名人級";
           sound = $audioStar;
         } else if (elapsedTime <= 6) {
-          title = "エキスパート";
+          title = "連打エキスパート";
           sound = $audioStar;
         } else {
-          title = "マスター";
+          title = "見習い連打マン";
           sound = $audioSuccess;
         }
 
         displayMessage(`${elapsedTime.toFixed(1)}秒 - ${title}`);
         sound.play();
-
-        // リセット
+      }
+      if (currentCount === 10) {
         startTime = null;
         $counter.textContent = 0;
         resetBackGroundColor();
+        removeMessage();
         return;
       }
 
       $counter.textContent = currentCount + 1;
     } else {
+      if (currentCount === -5) {
+        changeBackGroundColor();
+      }
+      if (currentCount === -10) {
+        $counter.textContent = 0;
+        resetBackGroundColor();
+        return;
+      }
       $counter.textContent = currentCount - 1;
     }
   };
@@ -71,5 +85,29 @@ const displayMessage = (message) => {
 export const removeMessage = () => {
   const $counter = document.getElementsByClassName("counter");
   const $messageHeadline = document.getElementById("message-headline");
-  if ($messageHeadline) $counter[0].removeChild($messageHeadline);
+  $counter[0].removeChild($messageHeadline);
+};
+// 背景とボタンの色を変える。
+const changeBackGroundColor = () => {
+  const $counter = document.getElementsByClassName("counter");
+  const $counterNumber = document.getElementsByClassName("counter-number");
+  const $button = document.getElementsByClassName("button");
+  $counter[0].classList.add("counter-second");
+  $counterNumber[0].classList.add("counter-number-second");
+  // すべてのボタンにクラスを追加する
+  for (let i = 0; i < $button.length; i++) {
+    $button[i].classList.add("button-second");
+  }
+};
+// 背景を戻す
+export const resetBackGroundColor = () => {
+  const $counter = document.getElementsByClassName("counter");
+  const $counterNumber = document.getElementsByClassName("counter-number");
+  const $button = document.getElementsByClassName("button");
+  $counter[0].classList.remove("counter-second");
+  $counterNumber[0].classList.remove("counter-number-second");
+  // すべてのボタンの追加クラスを削除。
+  for (let i = 0; i < $button.length; i++) {
+    $button[i].classList.remove("button-second");
+  }
 };

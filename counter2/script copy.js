@@ -56,18 +56,6 @@ const changeBackGroundColor = () => {
     $button[i].classList.add("button-second");
   }
 };
-// 背景を戻す
-export const resetBackGroundColor = () => {
-  const $counter = document.getElementsByClassName("counter");
-  const $counterNumber = document.getElementsByClassName("counter-number");
-  const $button = document.getElementsByClassName("button");
-  $counter[0].classList.remove("counter-second");
-  $counterNumber[0].classList.remove("counter-number-second");
-  // すべてのボタンにクラスを追加する
-  for (let i = 0; i < $button.length; i++) {
-    $button[i].classList.remove("button-second");
-  }
-};
 
 // 応援メッセージ
 const displayMessage = (message) => {
