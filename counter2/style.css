@@ -6,11 +6,15 @@
     border: 2px solid #000;
 }
 .counter-second {
-    background-color: #000;
+    background-color: #333f;
     border: 2px solid #fff;
 }
-#message-headline {
+#counter-headline {
     font-size: 50px;
+    margin: 0;
+}
+#message-headline {
+    font-size: 40px;
     color: #e80808;
     margin: 0;
     transition: 3s;
@@ -19,6 +23,7 @@
     font-size: 50px;
     margin-bottom: 10px;
 }
+.counter-headline-second,
 .counter-number-second {
     color: #fff;
 }
