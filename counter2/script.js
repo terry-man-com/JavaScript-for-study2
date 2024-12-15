@@ -1,3 +1,8 @@
+// カウント開始時間を記録用変数
+let startTime;
+// 背景が変わったどうかを判定するフラグ
+//（changeBackGroundColor関数使用の有無）
+let isChangeBackGroundColorUsed;
 // アプリの説明
 addEventListener("load", () => {
   alert("+ボタンを10回押した時間が出るよ!\n頑張って早く押してみてね♩♩♩");
@@ -5,29 +10,39 @@ addEventListener("load", () => {
 // 数字カウンター並びに１０カウントタイム測定（プラスボタンのみ)
 (() => {
   const $counter = document.getElementById("js-counter");
+  // 結果表示時の音
   const $voice = [
     new Audio("./music/「マーベラス」.mp3"),
     new Audio("./music/「エクセレント」.mp3"),
     new Audio("./music/「グッド」.mp3"),
-  ]; // 結果表示時の音
-
-  let startTime = null; // カウント開始時間を記録
+  ];
+  // 初期化
+  startTime = null;
+  // 初期化
+  isChangeBackGroundColorUsed = false;
 
   const clickHandler = (e) => {
     const $targetButton = e.currentTarget;
     let currentCount = parseInt($counter.textContent);
 
     if ($targetButton.textContent === "+") {
+      // 初回クリック時にタイマー開始
       if (startTime === null) {
         startTime = new Date();
-      } // 初回クリック時にタイマー開始
-
-      if (currentCount === 5) {
-        changeBackGroundColor();
       }
-
+      // 背景色の変更をデフォルトに戻し、フラグ更新（カウンタ-5以上）
+      if (currentCount >= -6 && isChangeBackGroundColorUsed === true) {
+        resetBackGroundColor();
+        isChangeBackGroundColorUsed = false;
+      }
+      // 背景色を変更、フラグを更新（カウンタ５以上）
+      if (currentCount >= 5 && isChangeBackGroundColorUsed != true) {
+        changeBackGroundColor();
+        isChangeBackGroundColorUsed = true;
+      }
+      // 結果発表〜〜〜
       if (currentCount === 9) {
-        const elapsedTime = (new Date() - startTime) / 1000; // 経過時間（秒）
+        const elapsedTime = (new Date() - startTime) / 1000; // ms->s(秒)に変更
 
         // 称号と音楽を格納する変数の設定
         let title = ""; // 称号用変数
@@ -49,18 +64,24 @@ addEventListener("load", () => {
         changeDisplay();
         startTime = null;
       }
-
       $counter.textContent = currentCount + 1;
     } else {
-      if (currentCount === -5) {
-        changeBackGroundColor(); // 背景色の変更
+      // 背景色をデフォルトに戻す（カウンタ５以下）
+      if (currentCount <= 6 && isChangeBackGroundColorUsed === true) {
+        resetBackGroundColor();
+        isChangeBackGroundColorUsed = false;
       }
+      // 背景色を変更、フラグの更新（カウンタ-6以下）
+      if (currentCount <= -5 && isChangeBackGroundColorUsed != true) {
+        changeBackGroundColor();
+        isChangeBackGroundColorUsed = true;
+      }
+      // 自動的に−11以下は０カウントに戻す処理。
       if (currentCount === -10) {
         $counter.textContent = 0;
-        resetBackGroundColor(); // 背景色をデフォルトに戻す
+        resetBackGroundColor();
         return;
       }
-
       $counter.textContent = currentCount - 1;
     }
   };
@@ -76,6 +97,26 @@ addEventListener("load", () => {
   }
 })();
 
+// リセットボタン機能
+(() => {
+  const $counter = document.getElementById("js-counter");
+
+  const clickHandler = () => {
+    $counter.textContent = 0;
+    setButton();
+    resetBackGroundColor();
+    startTime = null;
+    isChangeBackGroundColorUsed = false;
+    if (document.getElementById("message-headline")) {
+      removeMessage();
+    }
+  };
+
+  document
+    .getElementById("js-reset-button")
+    .addEventListener("click", clickHandler);
+})();
+
 // メッセージ表示※
 const displayMessage = (message) => {
   const $message = document.createElement("h2");
@@ -86,12 +127,29 @@ const displayMessage = (message) => {
   $counter[0].insertBefore($message, $counterNumber);
 };
 
+// 応援メッセージ削除
+const removeMessage = () => {
+  const $counter = document.getElementsByClassName("counter");
+  const $messageHeadline = document.getElementById("message-headline");
+  if ($messageHeadline) {
+    $counter[0].removeChild($messageHeadline);
+  }
+};
+
 // リセットボタンのみ表示させる
 const changeDisplay = () => {
   const $minusButton = document.getElementById("minus-sign");
   const $plusButton = document.getElementById("plus-sign");
   $minusButton.setAttribute("hidden", "hidden");
   $plusButton.setAttribute("hidden", "hidden");
+};
+
+// プラスボタンとマイナスボタンを表示にさせる。
+const setButton = () => {
+  const $minusButton = document.getElementById("minus-sign");
+  const $plusButton = document.getElementById("plus-sign");
+  $minusButton.removeAttribute("hidden", "hidden");
+  $plusButton.removeAttribute("hidden", "hidden");
 };
 
 // 背景とボタンの色を変える。
@@ -110,7 +168,7 @@ const changeBackGroundColor = () => {
 };
 
 // 背景を戻す
-export const resetBackGroundColor = () => {
+const resetBackGroundColor = () => {
   const $counter = document.getElementsByClassName("counter");
   const $counterHeadLine = document.getElementById("counter-headline");
   const $counterNumber = document.getElementsByClassName("counter-number");
