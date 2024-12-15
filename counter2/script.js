@@ -1,6 +1,7 @@
 // アプリの説明
 addEventListener("load", () => {
   alert("+ボタンを10回押した時間が出るよ!\n頑張って早く押してみてね♩♩♩");
+
 });
 // 数字カウンター並びに１０カウントタイム測定（プラスボタンのみ)
 (() => {
@@ -20,9 +21,8 @@ addEventListener("load", () => {
     if ($targetButton.textContent === "+") {
       if (startTime === null) {
         startTime = new Date();
-
       } // 初回クリック時にタイマー開始
-
+      
       if (currentCount === 5) {
         changeBackGroundColor();
       }
