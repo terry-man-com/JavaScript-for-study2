@@ -76,7 +76,7 @@ addEventListener("load", () => {
   }
 })();
 
-// メッセージ表示
+// メッセージ表示※
 const displayMessage = (message) => {
   const $message = document.createElement("h2");
   $message.setAttribute("id", "message-headline");
