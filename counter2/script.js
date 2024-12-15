@@ -1,7 +1,6 @@
 // アプリの説明
 addEventListener("load", () => {
   alert("+ボタンを10回押した時間が出るよ!\n頑張って早く押してみてね♩♩♩");
-
 });
 // 数字カウンター並びに１０カウントタイム測定（プラスボタンのみ)
 (() => {
@@ -22,7 +21,7 @@ addEventListener("load", () => {
       if (startTime === null) {
         startTime = new Date();
       } // 初回クリック時にタイマー開始
-      
+
       if (currentCount === 5) {
         changeBackGroundColor();
       }
@@ -30,9 +29,9 @@ addEventListener("load", () => {
       if (currentCount === 9) {
         const elapsedTime = (new Date() - startTime) / 1000; // 経過時間（秒）
 
-        // 称号を決定
-        let title = "";
-        let sound = null;
+        // 称号と音楽を格納する変数の設定
+        let title = ""; // 称号用変数
+        let sound = null; // 音の格納用変数
 
         if (elapsedTime <= 1.5) {
           title = "高橋名人";
@@ -54,11 +53,11 @@ addEventListener("load", () => {
       $counter.textContent = currentCount + 1;
     } else {
       if (currentCount === -5) {
-        changeBackGroundColor();
+        changeBackGroundColor(); // 背景色の変更
       }
       if (currentCount === -10) {
         $counter.textContent = 0;
-        resetBackGroundColor();
+        resetBackGroundColor(); // 背景色をデフォルトに戻す
         return;
       }
 
@@ -86,6 +85,7 @@ const displayMessage = (message) => {
   const $counterNumber = document.getElementById("js-counter");
   $counter[0].insertBefore($message, $counterNumber);
 };
+
 // リセットボタンのみ表示させる
 const changeDisplay = () => {
   const $minusButton = document.getElementById("minus-sign");
@@ -108,6 +108,7 @@ const changeBackGroundColor = () => {
     $button[i].classList.add("button-second");
   }
 };
+
 // 背景を戻す
 export const resetBackGroundColor = () => {
   const $counter = document.getElementsByClassName("counter");
