@@ -3,29 +3,36 @@ let startTime;
 // 背景が変わったどうかを判定するフラグ
 //（changeBackGroundColor関数使用の有無）
 let isChangeBackGroundColorUsed;
+// ファンファーレ
+const fanfare = new Audio("./music/歓声と拍手1.mp3");
 // アプリの説明
 addEventListener("load", () => {
-  alert("+ボタンを10回押した時間が出るよ!\n頑張って早く押してみてね♩♩♩");
+  alert("startボタンを押すと10カウントした時間を測定できるよ!!");
 });
 // 数字カウンター並びに１０カウントタイム測定（プラスボタンのみ)
 (() => {
   const $counter = document.getElementById("js-counter");
   // 結果表示時の音
-  const $voice = [
+  const voice = [
     new Audio("./music/「マーベラス」.mp3"),
     new Audio("./music/「エクセレント」.mp3"),
     new Audio("./music/「グッド」.mp3"),
   ];
   // 初期化
-  startTime = null;
-  // 初期化
-  isChangeBackGroundColorUsed = false;
+  startTime = null; // １０カウントタイマー
+  isChangeBackGroundColorUsed = false; // 背景色変更
 
   const clickHandler = (e) => {
     const $targetButton = e.currentTarget;
     let currentCount = parseInt($counter.textContent);
 
-    if ($targetButton.textContent === "+") {
+    if ($targetButton.textContent === "Start"){
+
+      changeButton();
+      alert("プラスボタンをなるべく早く押してね！");
+
+    }
+    else if ($targetButton.textContent === "+") {
       // 初回クリック時にタイマー開始
       if (startTime === null) {
         startTime = new Date();
@@ -50,16 +57,17 @@ addEventListener("load", () => {
 
         if (elapsedTime <= 1.5) {
           title = "高橋名人";
-          sound = $voice[0];
+          sound = voice[0];
         } else if (elapsedTime <= 2) {
           title = "高速連打マン";
-          sound = $voice[1];
+          sound = voice[1];
         } else {
           title = "見習い";
-          sound = $voice[2];
+          sound = voice[2];
         }
 
         displayMessage(`${elapsedTime.toFixed(1)}秒 - ${title}`);
+        fanfare.play();
         sound.play();
         changeDisplay();
         startTime = null;
@@ -84,7 +92,7 @@ addEventListener("load", () => {
       }
       $counter.textContent = currentCount - 1;
     }
-  };
+    };
 
   for (
     let index = 0;
@@ -103,8 +111,11 @@ addEventListener("load", () => {
 
   const clickHandler = () => {
     $counter.textContent = 0;
+    fanfare.pause();
+    fanfare.currentTime = 0;
     setButton();
     resetBackGroundColor();
+    resetButton();
     startTime = null;
     isChangeBackGroundColorUsed = false;
     if (document.getElementById("message-headline")) {
@@ -116,6 +127,21 @@ addEventListener("load", () => {
     .getElementById("js-reset-button")
     .addEventListener("click", clickHandler);
 })();
+
+// Startボタン：非表示、＋ボタン：表示
+const changeButton = () => {
+  const $startButton = document.getElementById("start-button");
+  const $plusButton = document.getElementById("plus-sign");
+  $startButton.setAttribute("hidden", "hidden");
+  $plusButton.removeAttribute("hidden", "hidden");
+}
+// Startボタン：表示、＋ボタン：非表示
+const resetButton = () => {
+  const $startButton = document.getElementById("start-button");
+  const $plusButton = document.getElementById("plus-sign");
+  $startButton.removeAttribute("hidden", "hidden");
+  $plusButton.setAttribute("hidden", "hidden");
+}
 
 // メッセージ表示※
 const displayMessage = (message) => {
