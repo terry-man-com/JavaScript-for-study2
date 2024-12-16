@@ -3,12 +3,14 @@ let startTime;
 // 背景が変わったどうかを判定するフラグ
 //（changeBackGroundColor関数使用の有無）
 let isChangeBackGroundColorUsed;
+// startボタン押下のフラグ
+let isStartButtonPushed;
 // ファンファーレ
 const fanfare = new Audio("./music/歓声と拍手1.mp3");
 // アプリの説明
-addEventListener("load", () => {
-  alert("startボタンを押すと10カウントした時間を測定できるよ!!");
-});
+// addEventListener("load", () => {
+//   alert("startボタンを押すと10カウントした時間を測定できるよ!!");
+// });
 // 数字カウンター並びに１０カウントタイム測定（プラスボタンのみ)
 (() => {
   const $counter = document.getElementById("js-counter");
@@ -21,16 +23,18 @@ addEventListener("load", () => {
   // 初期化
   startTime = null; // １０カウントタイマー
   isChangeBackGroundColorUsed = false; // 背景色変更
+  isStartButtonPushed = false;
 
   const clickHandler = (e) => {
     const $targetButton = e.currentTarget;
     let currentCount = parseInt($counter.textContent);
 
     if ($targetButton.textContent === "Start"){
-
-      changeButton();
+      isStartButtonPushed = true;
+      startMusic();
       alert("プラスボタンをなるべく早く押してね！");
-
+      changeButton();
+      $counter.textContent = 0;
     }
     else if ($targetButton.textContent === "+") {
       // 初回クリック時にタイマー開始
@@ -113,11 +117,14 @@ addEventListener("load", () => {
     $counter.textContent = 0;
     fanfare.pause();
     fanfare.currentTime = 0;
-    setButton();
+    if(isStartButtonPushed){
+      setMinusButton();
+      changeButton();
+    }
     resetBackGroundColor();
-    resetButton();
     startTime = null;
     isChangeBackGroundColorUsed = false;
+    isStartButtonPushed = false;
     if (document.getElementById("message-headline")) {
       removeMessage();
     }
@@ -128,20 +135,26 @@ addEventListener("load", () => {
     .addEventListener("click", clickHandler);
 })();
 
-// Startボタン：非表示、＋ボタン：表示
+// Bgm再生
+const startMusic = () => {
+  const music = new Audio("./music/aux-enfers.mp3");
+  music.playbackRate = 1.25
+  music.currentTime = 11.5;
+  music.play();
+}
+
+// Startボタン、＋ボタン表示・非表示切り替え
 const changeButton = () => {
   const $startButton = document.getElementById("start-button");
   const $plusButton = document.getElementById("plus-sign");
-  $startButton.setAttribute("hidden", "hidden");
-  $plusButton.removeAttribute("hidden", "hidden");
-}
-// Startボタン：表示、＋ボタン：非表示
-const resetButton = () => {
-  const $startButton = document.getElementById("start-button");
-  const $plusButton = document.getElementById("plus-sign");
-  $startButton.removeAttribute("hidden", "hidden");
-  $plusButton.setAttribute("hidden", "hidden");
-}
+  if (!$startButton.hidden) {
+      $startButton.setAttribute("hidden", "hidden");
+      $plusButton.removeAttribute("hidden", "hidden");
+  } else {
+      $startButton.removeAttribute("hidden", "hidden");
+      $plusButton.setAttribute("hidden", "hidden");
+  }
+};
 
 // メッセージ表示※
 const displayMessage = (message) => {
@@ -170,12 +183,10 @@ const changeDisplay = () => {
   $plusButton.setAttribute("hidden", "hidden");
 };
 
-// プラスボタンとマイナスボタンを表示にさせる。
-const setButton = () => {
+// マイナスボタンを表示にさせる。
+const setMinusButton = () => {
   const $minusButton = document.getElementById("minus-sign");
-  const $plusButton = document.getElementById("plus-sign");
   $minusButton.removeAttribute("hidden", "hidden");
-  $plusButton.removeAttribute("hidden", "hidden");
 };
 
 // 背景とボタンの色を変える。
