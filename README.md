@@ -141,3 +141,34 @@ Javascriptの学習用リポジトリです。
    ```
    - `parent.children`を使うことで特定の子要素を指定できる。（挿入する前の位置）
    - 基準がない時（末尾に挿入する時）は第二引数にnullを入れる。
+
+- ブール値を使用して、状態を管理する。
+   - 特定の条件を表現する
+      - 例えば、「背景色が変更されているか」を isBackgroundChanged で管理すれば、その状態を true / false で明確に記録できる。
+      ```
+      let isBackgroundChanged = false; // 初期状態は背景がデフォルト
+      if (currentCount >= 5) {
+      if (!isBackgroundChanged) {
+         changeBackGroundColor(); // 背景を変更する
+         isBackgroundChanged = true; // 状態を記録
+      }
+      } else {
+      if (isBackgroundChanged) {
+         resetBackGroundColor(); // 背景を戻す
+         isBackgroundChanged = false; // 状態をリセット
+      }
+      }
+      ```
+   - トグル（切り替え）処理
+      - ブール値を使うことで、状態を簡単にトグル（true <-> false の切り替え）できます。
+      ```
+      let isButtonEnabled = false;
+
+      const toggleButton = () => {
+      isButtonEnabled = !isButtonEnabled; // true <-> false を切り替える
+      console.log(isButtonEnabled ? "ボタンが有効" : "ボタンが無効");
+      };
+
+      toggleButton(); // ボタンが有効
+      toggleButton(); // ボタンが無効
+      ```
