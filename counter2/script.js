@@ -1,3 +1,4 @@
+// 管理関係の変数
 // カウント開始時間を記録用変数
 let startTime;
 // 背景が変わったどうかを判定するフラグ
@@ -5,12 +6,12 @@ let startTime;
 let isChangeBackGroundColorUsed;
 // startボタン押下のフラグ
 let isStartButtonPushed;
-// ファンファーレ
-const fanfare = new Audio("./music/歓声と拍手1.mp3");
+
 // アプリの説明
-// addEventListener("load", () => {
-//   alert("startボタンを押すと10カウントした時間を測定できるよ!!");
-// });
+addEventListener("load", () => {
+  alert("Startボタンを押すと10カウントした時間を測定できるよ!!\n音が流れるから注意してね〜😃");
+});
+
 // 数字カウンター並びに１０カウントタイム測定（プラスボタンのみ)
 (() => {
   const $counter = document.getElementById("js-counter");
@@ -20,9 +21,9 @@ const fanfare = new Audio("./music/歓声と拍手1.mp3");
     new Audio("./music/「エクセレント」.mp3"),
     new Audio("./music/「グッド」.mp3"),
   ];
-  // 初期化
-  startTime = null; // １０カウントタイマー
-  isChangeBackGroundColorUsed = false; // 背景色変更
+
+  startTime = null;
+  isChangeBackGroundColorUsed = false;
   isStartButtonPushed = false;
 
   const clickHandler = (e) => {
@@ -31,9 +32,7 @@ const fanfare = new Audio("./music/歓声と拍手1.mp3");
 
     if ($targetButton.textContent === "Start"){
       isStartButtonPushed = true;
-      startMusic();
-      alert("プラスボタンをなるべく早く押してね！");
-      changeButton();
+      startTenCount();
       $counter.textContent = 0;
     }
     else if ($targetButton.textContent === "+") {
@@ -59,14 +58,14 @@ const fanfare = new Audio("./music/歓声と拍手1.mp3");
         let title = ""; // 称号用変数
         let sound = null; // 音の格納用変数
 
-        if (elapsedTime <= 1.5) {
-          title = "高橋名人";
+        if (elapsedTime <= 1.1) {
+          title = "高橋名人(伝説)";
           sound = voice[0];
-        } else if (elapsedTime <= 2) {
-          title = "高速連打マン";
+        } else if (elapsedTime <= 1.5) {
+          title = "シャア専用";
           sound = voice[1];
         } else {
-          title = "見習い";
+          title = "人間";
           sound = voice[2];
         }
 
@@ -115,19 +114,19 @@ const fanfare = new Audio("./music/歓声と拍手1.mp3");
 
   const clickHandler = () => {
     $counter.textContent = 0;
-    fanfare.pause();
-    fanfare.currentTime = 0;
-    if(isStartButtonPushed){
+    startTime = null;
+    resetBackGroundColor();
+    fanfareStop();
+    if (isStartButtonPushed) {
       setMinusButton();
       changeButton();
+      stopMusic();
     }
-    resetBackGroundColor();
-    startTime = null;
-    isChangeBackGroundColorUsed = false;
-    isStartButtonPushed = false;
     if (document.getElementById("message-headline")) {
       removeMessage();
     }
+    isChangeBackGroundColorUsed = false;
+    isStartButtonPushed = false;
   };
 
   document
@@ -135,18 +134,37 @@ const fanfare = new Audio("./music/歓声と拍手1.mp3");
     .addEventListener("click", clickHandler);
 })();
 
+// 10カウントタイム測定
+// Bgm
+const music = new Audio("./music/aux-enfers.mp3");
 // Bgm再生
 const startMusic = () => {
-  const music = new Audio("./music/aux-enfers.mp3");
-  music.playbackRate = 1.25
   music.currentTime = 11.5;
+  music.loop;
   music.play();
-}
+};
+// Bgm停止
+const stopMusic = () => {
+  music.pause();
+  music.currentTime = 0;
+};
+// startボタン押下時の処理
+const startVoice = new Audio("./music/「ゴー」.mp3");
+
+const startTenCount = () => {
+      startMusic();
+      setTimeout(() => {
+        alert("＋ボタンをなるべく早く押してね！");
+        startVoice.play();
+        changeButton();
+      }, 100);
+};
 
 // Startボタン、＋ボタン表示・非表示切り替え
 const changeButton = () => {
   const $startButton = document.getElementById("start-button");
   const $plusButton = document.getElementById("plus-sign");
+
   if (!$startButton.hidden) {
       $startButton.setAttribute("hidden", "hidden");
       $plusButton.removeAttribute("hidden", "hidden");
@@ -154,6 +172,13 @@ const changeButton = () => {
       $startButton.removeAttribute("hidden", "hidden");
       $plusButton.setAttribute("hidden", "hidden");
   }
+};
+// ファンファーレ
+const fanfare = new Audio("./music/歓声と拍手1.mp3");
+
+const fanfareStop = () => {
+    fanfare.pause();
+    fanfare.currentTime = 0;
 };
 
 // メッセージ表示※
@@ -166,7 +191,7 @@ const displayMessage = (message) => {
   $counter[0].insertBefore($message, $counterNumber);
 };
 
-// 応援メッセージ削除
+// メッセージ削除
 const removeMessage = () => {
   const $counter = document.getElementsByClassName("counter");
   const $messageHeadline = document.getElementById("message-headline");
@@ -189,6 +214,7 @@ const setMinusButton = () => {
   $minusButton.removeAttribute("hidden", "hidden");
 };
 
+// ＋ボタン・−ボタン・Resetボタン共通機能
 // 背景とボタンの色を変える。
 const changeBackGroundColor = () => {
   const $counter = document.getElementsByClassName("counter");
