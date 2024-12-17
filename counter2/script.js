@@ -58,11 +58,11 @@ addEventListener("load", () => {
         let title = ""; // 称号用変数
         let sound = null; // 音の格納用変数
 
-        if (elapsedTime <= 1.1) {
-          title = "高橋名人(伝説)";
+        if (elapsedTime <= 1.3) {
+          title = "高橋名人";
           sound = voice[0];
         } else if (elapsedTime <= 1.5) {
-          title = "シャア専用";
+          title = "シャア専用DOM";
           sound = voice[1];
         } else {
           title = "人間";
@@ -139,7 +139,7 @@ addEventListener("load", () => {
 const music = new Audio("./music/aux-enfers.mp3");
 // Bgm再生
 const startMusic = () => {
-  music.currentTime = 11.5;
+  music.currentTime = 10.5;
   music.loop;
   music.play();
 };
